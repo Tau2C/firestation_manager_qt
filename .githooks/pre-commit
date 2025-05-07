@@ -1,0 +1,5 @@
+#!/bin/sh
+# Run clang-format on C++ source files before commit
+clang-format -i *.hpp *.cpp
+
+# Add any other pre-commit logic here if needed

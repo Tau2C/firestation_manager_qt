@@ -4,13 +4,14 @@ echo "Setting up Git hooks from .githooks/..."
 HOOKS_DIR=".githooks"
 GIT_HOOKS_DIR="$(git rev-parse --git-path hooks)"
 
-for hook in post-merge post-checkout; do
+for hook in post-merge post-checkout pre-commit; do
   src="$HOOKS_DIR/$hook"
   dest="$GIT_HOOKS_DIR/$hook"
 
   if [ -f "$src" ]; then
     echo "Installing hook: $hook"
-    ln -sf "../../$src" "$dest"
+	rm -f "$dest"
+    cp "$src" "$dest"
     chmod +x "$dest"
   else
     echo "Warning: Hook script $src not found"
