@@ -1,0 +1,20 @@
+services:
+  postgres:
+    build: .
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - 5432:5432
+  pgadmin:
+    restart: unless-stopped
+    image: dpage/pgadmin4
+    depends_on:
+      - postgres
+    ports:
+      - 82:80
+    environment:
+      PGADMIN_DEFAULT_EMAIL: postgres@postgres.com
+      PGADMIN_DEFAULT_PASSWORD: postgres

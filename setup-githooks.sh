@@ -1,4 +1,10 @@
 #!/bin/sh
+echo "Initializing submodules"
+git submodule update --init --recursive
+
+chmod +x lib/*/setup-githooks.sh
+./lib/*/setup-githooks.sh
+
 echo "Setting up Git hooks from .githooks/..."
 
 HOOKS_DIR=".githooks"

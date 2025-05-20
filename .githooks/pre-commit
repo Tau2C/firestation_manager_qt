@@ -1,5 +1,33 @@
 #!/bin/sh
-# Run clang-format on C++ source files before commit
-clang-format -i *.hpp *.cpp
+
+# Find all staged src/*.cpp, src/*.hpp, src/*.h files
+files=$(git diff --cached --name-only --diff-filter=ACM | grep '^src/.*\.\(cpp\|hpp\|h\)$')
+
+if [ -z "$files" ]; then
+    exit 0
+fi
+
+echo "Running clang-format on staged source files..."
+
+# Format each file and re-stage if changed
+changed=0
+for file in $files; do
+    if [ -f "$file" ]; then
+        clang-format -i "$file"
+        # If the file was modified by clang-format, re-stage it
+        if ! git diff --quiet "$file"; then
+            git add "$file"
+            changed=1
+        fi
+    fi
+done
+
+if [ $changed -eq 1 ]; then
+    echo "Some files were reformatted by clang-format and re-staged."
+    echo "Please review the changes and commit again."
+    exit 1
+fi
 
 # Add any other pre-commit logic here if needed
+
+exit 0
